@@ -1,1225 +1,409 @@
 <!DOCTYPE html>
-<html lang="ru" data-theme="forest" data-mode="dark">
+<html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Filum — пространство для творчества</title>
-  <meta name="description" content="Filum — пространство для творчества. Приложение для рукоделия: процессы, счётчик рядов, схемы и расчёт стоимости." />
-  <meta name="theme-color" content="#101815" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --text-xs: clamp(0.75rem, 0.72rem + 0.15vw, 0.875rem);
-      --text-sm: clamp(0.875rem, 0.84rem + 0.2vw, 1rem);
-      --text-base: clamp(1rem, 0.97rem + 0.22vw, 1.075rem);
-      --text-lg: clamp(1.125rem, 1rem + 0.55vw, 1.35rem);
-      --text-xl: clamp(1.35rem, 1.15rem + 0.9vw, 1.75rem);
-      --text-2xl: clamp(1.75rem, 1.35rem + 1.5vw, 2.4rem);
-
-      --space-1: 0.25rem;
-      --space-2: 0.5rem;
-      --space-3: 0.75rem;
-      --space-4: 1rem;
-      --space-5: 1.25rem;
-      --space-6: 1.5rem;
-      --space-8: 2rem;
-
-      --radius-sm: 0.65rem;
-      --radius-md: 0.85rem;
-      --radius-lg: 1.15rem;
-      --radius-xl: 1.4rem;
-      --radius-full: 999px;
-
-      --shadow-sm: 0 1px 2px rgba(0,0,0,.05), 0 4px 12px rgba(0,0,0,.03);
-      --shadow-md: 0 8px 24px rgba(0,0,0,.08), 0 3px 8px rgba(0,0,0,.04);
-      --shadow-lg: 0 16px 38px rgba(0,0,0,.12), 0 6px 16px rgba(0,0,0,.06);
-
-      --font-body: 'Inter', system-ui, sans-serif;
-      --font-display: 'Cormorant Garamond', Georgia, serif;
-
-      --sidebar-width: 17rem;
-      --header-height: 4.25rem;
-      --mobile-nav-height: 84px;
-      --safe-top: env(safe-area-inset-top, 0px);
-      --safe-bottom: env(safe-area-inset-bottom, 0px);
-    }
-
-    * { box-sizing: border-box; }
-    html { -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
-    body {
-      margin: 0;
-      min-height: 100dvh;
-      font-family: var(--font-body);
-      font-size: var(--text-base);
-      line-height: 1.5;
-      color: var(--color-text);
-      background: linear-gradient(180deg, var(--color-bg), var(--color-surface-offset));
-    }
-    img, canvas, svg { display: block; max-width: 100%; }
-    button, input, select, textarea { font: inherit; color: inherit; }
-    button { cursor: pointer; user-select: none; }
-    
-    input, select, textarea {
-      width: 100%;
-      min-height: 48px;
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-md);
-      background: var(--color-input);
-      padding: 0.75rem 0.9rem;
-      outline: none;
-      transition: border-color .15s ease, box-shadow .15s ease;
-    }
-    input:focus, select:focus, textarea:focus {
-      border-color: var(--color-primary);
-      box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 20%, transparent);
-    }
-    textarea { min-height: 90px; resize: vertical; }
-    a { color: inherit; text-decoration: none; }
-
-    /* Палитры тем */
-    html[data-theme="minimal"][data-mode="light"] {
-      --color-bg:#f4f4f2; --color-surface:#ffffff; --color-surface-2:#f6f6f4; --color-surface-offset:#ecece8;
-      --color-card:rgba(255,255,255,.8); --color-card-strong:rgba(255,255,255,.95); --color-input:#ffffff;
-      --color-text:#191a1c; --color-text-muted:#61656b; --color-text-faint:#9398a1; --color-border:rgba(25,26,28,.12); --color-divider:rgba(25,26,28,.08);
-      --color-primary:#454b54; --color-accent:#8f98a5; --color-success:#3c7c5a; --color-warning:#b78933; --color-danger:#b35a5f;
-    }
-    html[data-theme="minimal"][data-mode="dark"] {
-      --color-bg:#111214; --color-surface:#171a1d; --color-surface-2:#1d2125; --color-surface-offset:#0d0f11;
-      --color-card:rgba(23,26,29,.8); --color-card-strong:rgba(25,28,32,.95); --color-input:#1d2125;
-      --color-text:#eef1f4; --color-text-muted:#abb2bc; --color-text-faint:#767e89; --color-border:rgba(238,241,244,.12); --color-divider:rgba(238,241,244,.08);
-      --color-primary:#c2c8d0; --color-accent:#8a94a0; --color-success:#81cba2; --color-warning:#efc56a; --color-danger:#ef999b;
-    }
-    html[data-theme="cyber"][data-mode="light"] {
-      --color-bg:#f7f6fb; --color-surface:#ffffff; --color-surface-2:#f2eefc; --color-surface-offset:#ebe7fa;
-      --color-card:rgba(255,255,255,.8); --color-card-strong:rgba(255,255,255,.95); --color-input:#ffffff;
-      --color-text:#17142d; --color-text-muted:#615985; --color-text-faint:#918aa9; --color-border:rgba(23,20,45,.12); --color-divider:rgba(23,20,45,.08);
-      --color-primary:#5d49d4; --color-accent:#00b597; --color-success:#15956e; --color-warning:#c7922a; --color-danger:#b85d79;
-    }
-    html[data-theme="cyber"][data-mode="dark"] {
-      --color-bg:#0d0a16; --color-surface:#151022; --color-surface-2:#1b1530; --color-surface-offset:#09070f;
-      --color-card:rgba(21,16,34,.8); --color-card-strong:rgba(24,18,39,.95); --color-input:#1b1530;
-      --color-text:#f2eeff; --color-text-muted:#b8b0de; --color-text-faint:#8478aa; --color-border:rgba(242,238,255,.12); --color-divider:rgba(242,238,255,.08);
-      --color-primary:#8f80ff; --color-accent:#69edc5; --color-success:#63dfb0; --color-warning:#ebcb72; --color-danger:#ff95ae;
-    }
-    html[data-theme="rose"][data-mode="light"] {
-      --color-bg:#fff7f8; --color-surface:#fffdfd; --color-surface-2:#fff1f4; --color-surface-offset:#fde8ec;
-      --color-card:rgba(255,255,255,.8); --color-card-strong:rgba(255,255,255,.95); --color-input:#ffffff;
-      --color-text:#402d32; --color-text-muted:#84646d; --color-text-faint:#b2929b; --color-border:rgba(64,45,50,.12); --color-divider:rgba(64,45,50,.08);
-      --color-primary:#b77d8f; --color-accent:#f1c7b8; --color-success:#638c73; --color-warning:#ca9854; --color-danger:#c76876;
-    }
-    html[data-theme="rose"][data-mode="dark"] {
-      --color-bg:#1a1416; --color-surface:#241b1f; --color-surface-2:#2b2025; --color-surface-offset:#130e10;
-      --color-card:rgba(36,27,31,.8); --color-card-strong:rgba(41,31,35,.95); --color-input:#2b2025;
-      --color-text:#fff0f3; --color-text-muted:#d6b5be; --color-text-faint:#9b7c86; --color-border:rgba(255,240,243,.12); --color-divider:rgba(255,240,243,.08);
-      --color-primary:#e2a7ba; --color-accent:#f3cfaf; --color-success:#93c7a7; --color-warning:#efc281; --color-danger:#f39baa;
-    }
-    html[data-theme="forest"][data-mode="light"] {
-      --color-bg:#f5f8f4; --color-surface:#ffffff; --color-surface-2:#edf3ee; --color-surface-offset:#e4eee7;
-      --color-card:rgba(255,255,255,.8); --color-card-strong:rgba(255,255,255,.95); --color-input:#ffffff;
-      --color-text:#1a2b24; --color-text-muted:#587064; --color-text-faint:#87998f; --color-border:rgba(26,43,36,.12); --color-divider:rgba(26,43,36,.08);
-      --color-primary:#386d58; --color-accent:#8eb3a0; --color-success:#338056; --color-warning:#b88b42; --color-danger:#b35d58;
-    }
-    html[data-theme="forest"][data-mode="dark"] {
-      --color-bg:#101815; --color-surface:#15201b; --color-surface-2:#1b2822; --color-surface-offset:#0b100d;
-      --color-card:rgba(22,32,27,.8); --color-card-strong:rgba(25,36,31,.95); --color-input:#1b2822;
-      --color-text:#edf5ef; --color-text-muted:#aec1b6; --color-text-faint:#75877d; --color-border:rgba(237,245,239,.12); --color-divider:rgba(237,245,239,.08);
-      --color-primary:#8ec3aa; --color-accent:#4f8f73; --color-success:#7fd0a4; --color-warning:#ebc67b; --color-danger:#eb9b95;
-    }
-
-    /* Макет */
-    .shell {
-      display: grid;
-      grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
-      min-height: 100dvh;
-    }
-    
-    .sidebar {
-      position: sticky; top: 0; height: 100dvh;
-      padding: calc(1.5rem + var(--safe-top)) 1rem 1.25rem;
-      background: var(--color-card-strong);
-      border-right: 1px solid var(--color-divider);
-      display: flex; flex-direction: column; gap: 1.5rem;
-    }
-    
-    .brand { display: flex; align-items: center; gap: .75rem; padding: 0 .25rem; }
-    .brand-mark {
-      width: 2.5rem; height: 2.5rem; border-radius: .75rem; display: grid; place-items: center; color: #fff;
-      background: linear-gradient(135deg, var(--color-primary), var(--color-accent)); box-shadow: var(--shadow-sm);
-    }
-    .brand-copy h1 { margin: 0; font-size: var(--text-lg); font-family: var(--font-body); font-weight: 700; letter-spacing: -0.02em; }
-    .brand-copy p { margin: 0; font-size: 9px; letter-spacing: .15em; text-transform: uppercase; color: var(--color-text-muted); font-weight: 600; }
-
-    .nav-title { margin: 0 0 .5rem; padding: 0 .75rem; font-size: 10px; color: var(--color-text-faint); text-transform: uppercase; letter-spacing: .1em; font-weight: 700; }
-    .nav-list { display: grid; gap: .35rem; }
-    .nav-button {
-      min-height: 44px; width: 100%; border: 1px solid transparent; background: transparent; color: var(--color-text-muted);
-      border-radius: .75rem; display: flex; align-items: center; gap: .75rem; padding: .65rem .85rem; text-align: left;
-    }
-    .nav-button svg { width: 1.15rem; height: 1.15rem; }
-    .nav-button:hover, .nav-button.active {
-      background: color-mix(in srgb, var(--color-primary) 10%, var(--color-surface-2));
-      border-color: color-mix(in srgb, var(--color-primary) 8%, transparent); color: var(--color-text);
-    }
-    
-    .sidebar-foot {
-      margin-top: auto; padding: .85rem; border-radius: var(--radius-md); border: 1px solid var(--color-border); background: var(--color-surface-2);
-      display: grid; gap: .5rem; font-size: var(--text-xs);
-    }
-    .sidebar-foot div { display: flex; justify-content: space-between; }
-    .sidebar-foot span:last-child { color: var(--color-text-muted); font-weight: 600; }
-
-    .main { min-width: 0; display: flex; flex-direction: column; }
-    
-    .topbar {
-      position: sticky; top: 0; z-index: 40; min-height: var(--header-height);
-      padding: calc(0.75rem + var(--safe-top)) 1.5rem 0.75rem;
-      background: color-mix(in srgb, var(--color-bg) 92%, transparent); backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--color-divider);
-      display: flex; align-items: center; justify-content: space-between; gap: 1rem;
-    }
-    .topbar-actions { display: flex; gap: .5rem; }
-
-    /* Кнопки */
-    .btn {
-      min-height: 44px; border: 1px solid var(--color-border); border-radius: var(--radius-full); background: var(--color-surface); color: var(--color-text);
-      padding: 0 1rem; display: inline-flex; align-items: center; justify-content: center; gap: .5rem; font-size: var(--text-sm); font-weight: 500;
-      transition: background .15s ease, transform .1s ease;
-    }
-    .btn:active { transform: scale(0.98); }
-    .btn-primary { background: var(--color-primary); color: var(--color-bg); border-color: transparent; font-weight: 600; }
-    .btn-primary:hover { background: color-mix(in srgb, var(--color-primary) 90%, #fff); }
-    .btn-soft { background: var(--color-surface-2); border-color: transparent; }
-    .btn-soft:hover { background: color-mix(in srgb, var(--color-surface-2) 90%, var(--color-text)); }
-
-    /* Контент */
-    .content {
-      display: grid; gap: 1.5rem; padding: 1.5rem; 
-      /* Обязательный защитный отступ снизу под Poco X4, чтобы меню не перекрывало контент */
-      padding-bottom: calc(var(--mobile-nav-height) + 40px + var(--safe-bottom));
-    }
-    
-    .hero {
-      border-radius: var(--radius-xl); border: 1px solid var(--color-border);
-      background: var(--color-card-strong); padding: 1.5rem;
-      display: grid; grid-template-columns: 1.3fr 0.9fr; gap: 1.5rem;
-    }
-    .hero-copy h2 {
-      margin: 0 0 .5rem; font-family: var(--font-display); font-size: var(--text-2xl); line-height: 1.1;
-      text-wrap: balance; max-width: 24ch; font-weight: 700;
-    }
-    .hero-copy p { margin: 0 0 1.25rem; color: var(--color-text-muted); font-size: var(--text-sm); max-width: 50ch; }
-    
-    .hero-metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: .75rem; }
-    .metric { border-radius: var(--radius-md); padding: .75rem; background: var(--color-surface-2); border: 1px solid var(--color-border); }
-    .metric strong { display: block; font-size: var(--text-lg); font-weight: 700; }
-    .metric span { color: var(--color-text-muted); font-size: 11px; }
-    
-    .hero-side { display: grid; gap: .6rem; }
-    .hero-note { border-radius: var(--radius-md); padding: .75rem; background: var(--color-surface); border: 1px solid var(--color-border); font-size: var(--text-xs); }
-    .hero-note strong { display: block; margin-bottom: .15rem; color: var(--color-primary); }
-    .hero-note p { margin: 0; color: var(--color-text-muted); }
-
-    .grid-two { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 1.5rem; }
-    .stack { display: grid; gap: 1.5rem; }
-    
-    .panel {
-      border-radius: var(--radius-xl); border: 1px solid var(--color-border); background: var(--color-card); padding: 1.25rem;
-    }
-    .panel-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; margin-bottom: 1.25rem; }
-    .panel-head h3 { margin: 0; font-size: var(--text-lg); font-weight: 700; }
-    .panel-head p { margin: .15rem 0 0; color: var(--color-text-muted); font-size: var(--text-xs); }
-    .panel-actions { display: flex; gap: .5rem; }
-
-    /* Списки процессов */
-    .process-list { display: grid; gap: .75rem; }
-    .process-card {
-      border-radius: var(--radius-lg); border: 1px solid var(--color-border); background: var(--color-surface); padding: 1rem; display: grid; gap: .75rem;
-    }
-    .process-top { display: flex; justify-content: space-between; gap: 1rem; align-items: flex-start; }
-    .process-title h4 { margin: 0 0 .25rem; font-size: var(--text-sm); font-weight: 600; }
-    .chip-row { display: flex; gap: .35rem; }
-    .chip { display: inline-flex; padding: .2rem .5rem; border-radius: var(--radius-full); font-size: 11px; background: var(--color-surface-2); color: var(--color-text-muted); }
-    .chip-success { background: color-mix(in srgb, var(--color-success) 15%, var(--color-surface-2)); color: var(--color-success); font-weight: 500; }
-    
-    .progress-track { height: 8px; border-radius: var(--radius-full); background: var(--color-surface-2); overflow: hidden; }
-    .progress-bar { height: 100%; width: 0; background: var(--color-primary); border-radius: inherit; transition: width .3s ease; }
-    
-    .process-meta { display: grid; grid-template-columns: repeat(3, 1fr); gap: .5rem; font-size: var(--text-xs); }
-    .mini-stat { border-radius: var(--radius-sm); background: var(--color-surface-2); padding: .5rem; }
-    .mini-stat span { display: block; color: var(--color-text-faint); margin-bottom: .1rem; }
-    .mini-stat strong { font-size: var(--text-sm); }
-
-    /* Счётчик рядов */
-    .counter-wrapper { display: grid; grid-template-columns: 1fr auto; gap: 1rem; align-items: center; margin-bottom: 1rem; }
-    .counter-value strong { font-size: clamp(2.5rem, 5vw, 3.5rem); font-weight: 800; line-height: 1; color: var(--color-primary); }
-    .counter-value span { color: var(--color-text-muted); font-size: var(--text-xs); margin-left: .25rem; }
-    .counter-buttons { display: flex; gap: .5rem; }
-    .btn-counter-main { min-height: 64px; min-width: 100px; border-radius: var(--radius-lg); font-size: var(--text-base); font-weight: 700; }
-    .btn-counter-sub { min-height: 64px; min-width: 54px; border-radius: var(--radius-lg); font-size: var(--text-base); }
-    
-    .alert-box {
-      border-radius: var(--radius-md); padding: .75rem; font-size: var(--text-xs); margin-top: .5rem;
-      background: color-mix(in srgb, var(--color-accent) 10%, var(--color-surface)); border: 1px solid var(--color-border); color: var(--color-text-muted);
-    }
-    .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; margin-top: 1rem; }
-    .input-grid label { display: block; font-size: 11px; color: var(--color-text-muted); margin-bottom: .25rem; font-weight: 500; }
-
-    /* Калькулятор стоимости */
-    .calc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; }
-    .calc-grid fieldset { border: none; padding: 0; margin: 0; }
-    .calc-grid label { display: block; font-size: 11px; color: var(--color-text-muted); margin-bottom: .25rem; }
-    .price-box {
-      margin-top: 1rem; border-radius: var(--radius-lg); padding: 1rem; background: color-mix(in srgb, var(--color-success) 8%, var(--color-surface)); border: 1px solid var(--color-border);
-      display: grid; gap: .2rem;
-    }
-    .price-box strong { font-size: var(--text-xl); color: var(--color-success); font-weight: 700; }
-    .price-box span { font-size: var(--text-xs); color: var(--color-text-muted); }
-
-    /* Конструктор схем */
-    .builder-layout { display: grid; grid-template-columns: 20rem minmax(0, 1fr); gap: 1.5rem; }
-    .builder-sidebar { display: flex; flex-direction: column; gap: 1rem; }
-    .subcard { border-radius: var(--radius-lg); border: 1px solid var(--color-border); background: var(--color-surface); padding: 0.9rem; }
-    .subcard h4 { margin: 0 0 .75rem; font-size: var(--text-sm); font-weight: 600; }
-    
-    .preset-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: .4rem; }
-    .btn-preset { min-height: 38px; padding: 0; font-size: var(--text-xs); border-radius: var(--radius-sm); }
-    .btn-preset.active { background: var(--color-primary); color: var(--color-bg); border-color: transparent; }
-    
-    .tool-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .4rem; }
-    .btn-tool { min-height: 40px; font-size: var(--text-xs); border-radius: var(--radius-sm); }
-    .btn-tool.active { background: var(--color-primary); color: var(--color-bg); border-color: transparent; }
-    
-    .palette-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: .4rem; }
-    .swatch {
-      aspect-ratio: 1; width: 100%; border-radius: .5rem; border: 2px solid transparent; padding: 0;
-      box-shadow: inset 0 0 0 1px rgba(255,255,255,.1);
-    }
-    .swatch.active { border-color: var(--color-text); transform: scale(1.05); }
-    
-    .theme-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .4rem; }
-
-    .canvas-card { border-radius: var(--radius-xl); border: 1px solid var(--color-border); background: var(--color-surface-2); padding: 1rem; display: flex; flex-direction: column; gap: 1rem; }
-    .canvas-toolbar { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; font-size: var(--text-xs); color: var(--color-text-muted); }
-    .canvas-stage {
-      border-radius: var(--radius-lg); border: 1px solid var(--color-border); background: var(--color-bg);
-      min-height: 20rem; overflow: auto; padding: 1rem; display: flex; align-items: center; justify-content: center;
-    }
-    #patternCanvas {
-      background: #fff; image-rendering: pixelated; max-width: 100%; height: auto; border-radius: var(--radius-sm); box-shadow: var(--shadow-md);
-    }
-
-    /* Нижнее фиксированное меню (Poco X4) */
-    .mobile-nav {
-      display: none; position: fixed; left: .75rem; right: .75rem; bottom: calc(.75rem + var(--safe-bottom)); z-index: 60;
-      border-radius: var(--radius-xl); border: 1px solid var(--color-border); background: color-mix(in srgb, var(--color-card-strong) 92%, transparent); backdrop-filter: blur(16px);
-      box-shadow: var(--shadow-lg); padding: .4rem; grid-template-columns: repeat(4, 1fr); gap: .25rem;
-    }
-    .mobile-nav button {
-      min-height: 52px; border-radius: var(--radius-lg); border: 0; background: transparent; color: var(--color-text-muted); font-size: 11px;
-      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .15rem; padding: .25rem; font-weight: 500;
-    }
-    .mobile-nav button svg { width: 1.25rem; height: 1.25rem; }
-    .mobile-nav button.active { background: color-mix(in srgb, var(--color-primary) 12%, transparent); color: var(--color-text); font-weight: 600; }
-
-    .hidden { display: none !important; }
-
-    /* Адаптивность */
-    @media (max-width: 1120px) {
-      .hero, .grid-two, .builder-layout { grid-template-columns: 1fr; }
-    }
-    @media (max-width: 768px) {
-      .sidebar { display: none; }
-      .mobile-nav { display: grid; }
-      .topbar { padding: calc(0.5rem + var(--safe-top)) 1rem 0.5rem; }
-      .content { padding: 1rem; padding-bottom: calc(var(--mobile-nav-height) + 40px + var(--safe-bottom)); }
-      .hero-metrics { grid-template-columns: 1fr; }
-    }
-  </style>
-</head>
-<body>
-
-  <div class="shell">
-    <aside class="sidebar">
-      <div class="brand">
-        <div class="brand-mark">
-          <svg viewBox="0 0 64 64" width="22" height="22" fill="none">
-            <path d="M18 47C18 31 27 18 41 13" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>
-            <path d="M24 51C24 37 31 28 46 21" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" opacity=".8"/>
-            <circle cx="44" cy="17" r="4.5" fill="currentColor"/>
-            <path d="M21 48L15 55" stroke="currentColor" stroke-width="4.5" stroke-linecap="round"/>
-          </svg>
-        </div>
-        <div class="brand-copy">
-          <h1>Filum</h1>
-          <p>DIGITAL CANVAS</p>
-        </div>
-      </div>
-
-      <div>
-        <div class="nav-title">Разделы</div>
-        <nav class="nav-list" id="desktopNav"></nav>
-      </div>
-
-      <div class="sidebar-foot">
-        <div><span>Активных процессов</span><span id="footProcessCount">0</span></div>
-        <div><span>Средний прогресс</span><span id="footAverageProgress">0%</span></div>
-        <div><span>Тема</span><span id="footThemeName">—</span></div>
-      </div>
-    </aside>
-
-    <div class="main">
-      <header class="topbar">
-        <div class="brand" style="display: var(--display-mobile-brand, none);">
-          <div class="brand-copy">
-            <h1 style="font-size: var(--text-base);">Filum</h1>
-          </div>
-        </div>
-        <div class="topbar-actions" style="margin-left: auto;">
-          <button class="btn btn-soft" id="modeButton">Ночь</button>
-          <button class="btn btn-soft" id="exportButton">Экспорт</button>
-          <label class="btn btn-soft" style="cursor:pointer;">
-            Импорт
-            <input id="importInput" type="file" accept=".json" class="hidden">
-          </label>
-        </div>
-      </header>
-
-      <main class="content" id="content">
-        <section class="hero">
-          <div class="hero-copy">
-            <h2>Ваше пространство для творчества.</h2>
-            <p>Ведите процессы, считайте ряды, собирайте схемы и рассчитывайте стоимость изделий в одном спокойном рабочем пространстве.</p>
-            <div class="hero-metrics">
-              <div class="metric"><strong id="metricProcesses">0</strong><span>активных процессов</span></div>
-              <div class="metric"><strong id="metricRows">0</strong><span>рядов сегодня</span></div>
-              <div class="metric"><strong id="metricPalette">12</strong><span>цветов палитры</span></div>
-            </div>
-          </div>
-          <div class="hero-side">
-            <div class="hero-note"><strong>Локальное хранение</strong><p>Все проекты, настройки и текущая сетка автоматически сохраняются на вашем устройстве.</p></div>
-            <div class="hero-note"><strong>Мобильный UX</strong><p>Элементы адаптированы под быстрое касание пальцем. Нижнее меню не перекрывает рабочие кнопки.</p></div>
-          </div>
-        </section>
-
-        <div class="grid-two">
-          <section class="panel" id="section-processes">
-            <div class="panel-head">
-              <div>
-                <h3>Мои процессы</h3>
-                <p>Текущие работы и быстрый контроль шагов.</p>
-              </div>
-              <div class="panel-actions">
-                <button class="btn btn-soft" id="addSampleButton">Шаблон</button>
-                <button class="btn btn-primary" id="newProcessButton">Создать</button>
-              </div>
-            </div>
-            <div class="process-list" id="processList"></div>
-          </section>
-
-          <div class="stack">
-            <section class="panel" id="section-counter">
-              <div class="panel-head">
-                <div>
-                  <h3>Счётчик рядов</h3>
-                  <p>Быстрое добавление кликом по кнопке.</p>
-                </div>
-              </div>
-              <div class="counter-wrapper">
-                <div class="counter-value"><strong id="rowCountValue">0</strong><span>ряд</span></div>
-                <div class="counter-buttons">
-                  <button class="btn btn-primary btn-counter-main" id="incrementButton">+1 ряд</button>
-                  <button class="btn btn-soft btn-counter-sub" id="decrementButton">−1</button>
-                </div>
-              </div>
-              <div class="alert-box" id="alertBox">Оповещения настроены.</div>
-              <div class="input-grid">
-                <div>
-                  <label for="alertEveryInput">Шаг оповещения</label>
-                  <input id="alertEveryInput" type="number" min="1" step="1" value="5">
-                </div>
-                <div>
-                  <label for="alertModeSelect">Сигнал</label>
-                  <select id="alertModeSelect">
-                    <option value="visual">Экран</option>
-                    <option value="sound">Звук</option>
-                    <option value="both">Звук + экран</option>
-                  </select>
-                </div>
-              </div>
-            </section>
-
-            <section class="panel" id="section-pricing">
-              <div class="panel-head">
-                <div>
-                  <h3>Калькулятор стоимости</h3>
-                  <p>Расчёт чистой цены на основе материалов и времени.</p>
-                </div>
-              </div>
-              <div class="calc-grid">
-                <fieldset>
-                  <label for="materialsInput">Материалы (₽)</label>
-                  <input id="materialsInput" type="number" min="0" value="0">
-                </fieldset>
-                <fieldset>
-                  <label for="hoursInput">Время (часы)</label>
-                  <input id="hoursInput" type="number" min="0" step="0.5" value="0">
-                </fieldset>
-                <fieldset>
-                  <label for="rateInput">Ставка (₽/час)</label>
-                  <input id="rateInput" type="number" min="0" value="0">
-                </fieldset>
-                <fieldset>
-                  <label for="extraInput">Доп. расходы (₽)</label>
-                  <input id="extraInput" type="number" min="0" value="0">
-                </fieldset>
-              </div>
-              <div class="price-box">
-                <span>Рекомендованная цена изделий</span>
-                <strong id="priceResult">0 ₽</strong>
-                <span id="priceBreakdown">Введите базовые параметры.</span>
-              </div>
-            </section>
-          </div>
-        </div>
-
-        <section class="panel" id="section-builder">
-          <div class="panel-head">
-            <div>
-              <h3>Конструктор схем</h3>
-              <p>Создавайте узоры по пиксельной сетке или аккуратно преобразуйте готовые изображения.</p>
-            </div>
-            <div class="panel-actions">
-              <button class="btn btn-soft" id="clearPatternButton">Очистить</button>
-              <button class="btn btn-primary" id="savePatternButton">В процессы</button>
-            </div>
-          </div>
-
-          <div class="builder-layout">
-            <div class="builder-sidebar">
-              <div class="subcard">
-                <h4>Размер сетки</h4>
-                <div class="preset-grid">
-                  <button class="btn btn-soft btn-preset active" data-grid-preset="30">30×30</button>
-                  <button class="btn btn-soft btn-preset" data-grid-preset="60">60×60</button>
-                  <button class="btn btn-soft btn-preset" data-grid-preset="80">80×80</button>
-                </div>
-              </div>
-
-              <div class="subcard">
-                <h4>Загрузка изображения</h4>
-                <label class="btn btn-soft" style="width:100%; display:inline-flex; cursor:pointer;">
-                  Выбрать файл
-                  <input id="imageInput" type="file" accept="image/*" class="hidden">
-                </label>
-              </div>
-
-              <div class="subcard">
-                <h4>Режим рисования</h4>
-                <div class="tool-grid">
-                  <button class="btn btn-soft btn-tool active" data-tool="brush">Кисть</button>
-                  <button class="btn btn-soft btn-tool" data-tool="eraser">Ластик</button>
-                </div>
-              </div>
-
-              <div class="subcard">
-                <h4>Палитра оттенков</h4>
-                <div class="palette-grid" id="paletteGrid"></div>
-              </div>
-
-              <div class="subcard">
-                <h4>Интерфейс</h4>
-                <div class="theme-grid" id="themeGrid"></div>
-              </div>
-            </div>
-
-            <div class="canvas-card">
-              <div class="canvas-toolbar">
-                <span id="canvasInfo">Сетка: —</span>
-                <div style="display:flex; gap:.4rem;">
-                  <button class="btn btn-soft" id="undoButton" style="min-height:36px; padding:0 .75rem;">Отмена</button>
-                  <button class="btn btn-primary" id="downloadPatternButton" style="min-height:36px; padding:0 .75rem;">Скачать PNG</button>
-                </div>
-              </div>
-              <div class="canvas-stage">
-                <canvas id="patternCanvas" width="600" height="600"></canvas>
-              </div>
-            </div>
-          </div>
-        </section>
-      </main>
-    </div>
-  </div>
-
-  <nav class="mobile-nav" id="mobileNav"></nav>
-
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const STORAGE_KEY = 'filum_storage_state_v3';
-      
-      const THEMES = {
-        forest: 'Лесная прохлада',
-        minimal: 'Минимализм',
-        cyber: 'Кибер-неон',
-        rose: 'Пудровая роза'
-      };
-
-      const NAV_ITEMS = [
-        { id: 'processes', label: 'Процессы', target: 'section-processes', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 9h10M7 13h6" stroke-linecap="round"/></svg>' },
-        { id: 'counter', label: 'Счётчик', target: 'section-counter', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="8"/><path d="M12 8v5l3 2" stroke-linecap="round" stroke-linejoin="round"/></svg>' },
-        { id: 'builder', label: 'Схемы', target: 'section-builder', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z"/></svg>' },
-        { id: 'pricing', label: 'Цена', target: 'section-pricing', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M15 9H10.5a2 2 0 0 0 0 4H14a2 2 0 0 1 0 4H9" stroke-linecap="round"/></svg>' }
-      ];
-
-      const defaultState = {
-        settings: { theme: 'forest', mode: 'dark' },
-        processes: [
-          { id: 'p1', name: 'Лесной орнамент', craft: 'Вышивка крестиком', progress: 68, totalRows: 140, currentRow: 95, note: 'Лён 32 ct, изумрудная палитра' },
-          { id: 'p2', name: 'Фенечка Aurora', craft: 'Плетение', progress: 34, totalRows: 88, currentRow: 30, note: 'Диагональный паттерн' }
-        ],
-        rowCounter: { current: 0, alertEvery: 5, alertMode: 'visual', todayAdded: 0 },
-        calculator: { materials: 0, hours: 0, rate: 0, extra: 0 },
-        pattern: {
-          width: 30,
-          height: 30,
-          tool: 'brush',
-          activeColor: '#2F5D50',
-          colors: ['#2F5D50','#D9C7A0','#8F4E38','#E6E3DC','#1E2A24','#52796F','#B77E90','#6C63FF','#F4B860','#9AC7B8','#FFFFFF','#111111'],
-          pixels: []
-        }
-      };
-
-      let state = loadState();
-      let historyStack = [];
-      let isDrawing = false;
-      let audioCtx = null;
-
-      const els = {
-        desktopNav: document.getElementById('desktopNav'),
-        mobileNav: document.getElementById('mobileNav'),
-        modeButton: document.getElementById('modeButton'),
-        exportButton: document.getElementById('exportButton'),
-        importInput: document.getElementById('importInput'),
-        processList: document.getElementById('processList'),
-        addSampleButton: document.getElementById('addSampleButton'),
-        newProcessButton: document.getElementById('newProcessButton'),
-        footProcessCount: document.getElementById('footProcessCount'),
-        footAverageProgress: document.getElementById('footAverageProgress'),
-        footThemeName: document.getElementById('footThemeName'),
-        metricProcesses: document.getElementById('metricProcesses'),
-        metricRows: document.getElementById('metricRows'),
-        metricPalette: document.getElementById('metricPalette'),
-        rowCountValue: document.getElementById('rowCountValue'),
-        incrementButton: document.getElementById('incrementButton'),
-        decrementButton: document.getElementById('decrementButton'),
-        alertEveryInput: document.getElementById('alertEveryInput'),
-        alertModeSelect: document.getElementById('alertModeSelect'),
-        alertBox: document.getElementById('alertBox'),
-        materialsInput: document.getElementById('materialsInput'),
-        hoursInput: document.getElementById('hoursInput'),
-        rateInput: document.getElementById('rateInput'),
-        extraInput: document.getElementById('extraInput'),
-        priceResult: document.getElementById('priceResult'),
-        priceBreakdown: document.getElementById('priceBreakdown'),
-        clearPatternButton: document.getElementById('clearPatternButton'),
-        savePatternButton: document.getElementById('savePatternButton'),
-        imageInput: document.getElementById('imageInput'),
-        paletteGrid: document.getElementById('paletteGrid'),
-        themeGrid: document.getElementById('themeGrid'),
-        canvasInfo: document.getElementById('canvasInfo'),
-        undoButton: document.getElementById('undoButton'),
-        downloadPatternButton: document.getElementById('downloadPatternButton'),
-        patternCanvas: document.getElementById('patternCanvas')
-      };
-
-      const ctx = els.patternCanvas.getContext('2d', { alpha: false });
-
-      // Запуск инициализации
-      init();
-
-      function init() {
-        buildNavigation();
-        buildThemeButtons();
-        applyThemeStyles();
-        fillInputFields();
-        renderPaletteSwatches();
-        renderProcessesList();
-        renderCounterPanel();
-        renderCalculatorResult();
-        setupCanvasSize();
-        drawCanvasGrid();
-        attachEventListeners();
-        updateStatsSummary();
-      }
-
-      function loadState() {
-        try {
-          const raw = localStorage.getItem(STORAGE_KEY);
-          if (!raw) return createFreshPixels(structuredClone(defaultState));
-          const parsed = JSON.parse(raw);
-          return createFreshPixels({ ...structuredClone(defaultState), ...parsed });
-        } catch {
-          return createFreshPixels(structuredClone(defaultState));
-        }
-      }
-
-      function createFreshPixels(obj) {
-        const total = obj.pattern.width * obj.pattern.height;
-        if (!obj.pattern.pixels || obj.pattern.pixels.length !== total) {
-          obj.pattern.pixels = new Array(total).fill('#FFFFFF');
-        }
-        return obj;
-      }
-
-      function saveStateToStorage() {
-        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch {}
-        updateStatsSummary();
-      }
-
-      function fillInputFields() {
-        els.alertEveryInput.value = state.rowCounter.alertEvery;
-        els.alertModeSelect.value = state.rowCounter.alertMode;
-        els.materialsInput.value = state.calculator.materials || '';
-        els.hoursInput.value = state.calculator.hours || '';
-        els.rateInput.value = state.calculator.rate || '';
-        els.extraInput.value = state.calculator.extra || '';
-      }
-
-      function buildNavigation() {
-        const markup = NAV_ITEMS.map((item, idx) => `
-          <button class="${idx === 0 ? 'active' : ''}" data-target="${item.target}">
-            ${item.icon}<span>${item.label}</span>
-          </button>
-        `).join('');
-        els.desktopNav.innerHTML = markup;
-        els.mobileNav.innerHTML = markup;
-      }
-
-      function buildThemeButtons() {
-        els.themeGrid.innerHTML = Object.entries(THEMES).map(([key, name]) => `
-          <button class="btn btn-soft btn-preset ${state.settings.theme === key ? 'active' : ''}" data-theme-set="${key}">
-            ${name}
-          </button>
-        `).join('');
-      }
-
-      function applyThemeStyles() {
-        document.documentElement.setAttribute('data-theme', state.settings.theme);
-        document.documentElement.setAttribute('data-mode', state.settings.mode);
-        els.modeButton.textContent = state.settings.mode === 'dark' ? 'Ночь' : 'День';
-        els.footThemeName.textContent = THEMES[state.settings.theme];
-        document.documentElement.style.setProperty('--display-mobile-brand', window.innerWidth <= 768 ? 'block' : 'none');
-      }
-
-      function renderPaletteSwatches() {
-        els.paletteGrid.innerHTML = state.pattern.colors.map(color => `
-          <button class="swatch ${state.pattern.activeColor === color ? 'active' : ''}" data-color-set="${color}" style="background: ${color};" aria-label="${color}"></button>
-        `).join('');
-        els.metricPalette.textContent = state.pattern.colors.length;
-      }
-
-      function renderProcessesList() {
-        if (!state.processes.length) {
-          els.processList.innerHTML = `<div class="process-card"><p style="margin:0; text-align:center; color:var(--color-text-muted); font-size:var(--text-sm);">Список процессов пуст</p></div>`;
-          els.metricProcesses.textContent = '0';
-          return;
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Filum - Цифровой холст</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Тематические переменные */
+        :root {
+            /* Минимализм (по умолчанию) */
+            --bg-color: #ffffff;
+            --text-color: #1a1a1a;
+            --card-bg: #f3f4f6;
+            --accent-color: #4b5563;
         }
 
-        els.processList.innerHTML = state.processes.map(p => `
-          <article class="process-card">
-            <div class="process-top">
-              <div class="process-title">
-                <h4>${escapeString(p.name)}</h4>
-                <div class="chip-row">
-                  <span class="chip">${escapeString(p.craft)}</span>
-                  <span class="chip chip-success">${p.progress}% готово</span>
-                </div>
-              </div>
-              <button class="btn btn-soft" style="min-height:34px; padding:0 .6rem; font-size:11px;" data-process-step="${p.id}">+1 ряд</button>
-            </div>
-            <div class="progress-track"><div class="progress-bar" style="width: ${p.progress}%"></div></div>
-            <div class="process-meta">
-              <div class="mini-stat"><span>Ряд</span><strong>${p.currentRow} / ${p.totalRows}</strong></div>
-              <div class="mini-stat"><span>Осталось</span><strong>${Math.max(0, p.totalRows - p.currentRow)}</strong></div>
-              <div class="mini-stat"><span>Заметка</span><strong style="font-weight:400; font-size:10px; text-overflow:ellipsis; white-space:nowrap; overflow:hidden;">${escapeString(p.note || '—')}</strong></div>
-            </div>
-          </article>
-        `).join('');
-        els.metricProcesses.textContent = state.processes.length;
-      }
-
-      function renderCounterPanel() {
-        els.rowCountValue.textContent = state.rowCounter.current;
-        els.metricRows.textContent = state.rowCounter.todayAdded;
-        const nextTarget = Math.ceil((state.rowCounter.current + 1) / state.rowCounter.alertEvery) * state.rowCounter.alertEvery || state.rowCounter.alertEvery;
-        els.alertBox.textContent = `Следующее напоминание на ряду: ${nextTarget}`;
-      }
-
-      function renderCalculatorResult() {
-        const mat = Number(state.calculator.materials) || 0;
-        const hrs = Number(state.calculator.hours) || 0;
-        const rte = Number(state.calculator.rate) || 0;
-        const ext = Number(state.calculator.extra) || 0;
-        const total = mat + (hrs * rte) + ext;
-
-        els.priceResult.textContent = `${total.toLocaleString('ru-RU')} ₽`;
-        els.priceBreakdown.textContent = `Материалы: ${mat}₽ · Работа: ${hrs * rte}₽ · Доп: ${ext}₽`;
-      }
-
-      function setupCanvasSize() {
-        const sideSize = 600; 
-        els.patternCanvas.width = sideSize;
-        els.patternCanvas.height = sideSize;
-        els.canvasInfo.textContent = `Сетка ${state.pattern.width}×${state.pattern.height} · Конва`;
-      }
-
-      function drawCanvasGrid() {
-        const w = state.pattern.width;
-        const h = state.pattern.height;
-        const cellW = els.patternCanvas.width / w;
-        const cellH = els.patternCanvas.height / h;
-
-        ctx.fillStyle = '#FFFFFF';
-        ctx.fillRect(0, 0, els.patternCanvas.width, els.patternCanvas.height);
-
-        for (let y = 0; y < h; y++) {
-          for (let x = 0; x < w; x++) {
-            const idx = y * w + x;
-            ctx.fillStyle = state.pattern.pixels[idx] || '#FFFFFF';
-            ctx.fillRect(x * cellW, y * cellH, cellW, cellH);
-
-            ctx.strokeStyle = 'rgba(0,0,0,0.06)';
-            ctx.lineWidth = 1;
-            ctx.strokeRect(x * cellW, y * cellH, cellW, cellH);
-          }
+        /* Кибер-Неон */
+        [data-theme="cyber"] {
+            --bg-color: #0f001a;
+            --text-color: #e0e0e0;
+            --card-bg: #1a0033;
+            --accent-color: #00ffcc; /* Мятный неон */
+            --accent-hover: #00ccaa;
         }
-      }
 
-      function recordHistory() {
-        historyStack.push([...state.pattern.pixels]);
-        if (historyStack.length > 30) historyStack.shift();
-      }
+        /* Пудровая Роза */
+        [data-theme="rose"] {
+            --bg-color: #fff0f5;
+            --text-color: #4a3b3f;
+            --card-bg: #ffe4e1;
+            --accent-color: #d8bfd8;
+        }
 
-      function getCellCoords(e) {
-        const rect = els.patternCanvas.getBoundingClientRect();
-        const clientX = e.clientX || (e.touches && e.touches[0].clientX);
-        const clientY = e.clientY || (e.touches && e.touches[0].clientY);
+        /* Лесная Прохлада */
+        [data-theme="forest"] {
+            --bg-color: #1e2e26;
+            --text-color: #e2e8f0;
+            --card-bg: #2a3f34;
+            --accent-color: #4ade80;
+        }
+
+        /* Ночной режим (глобальный оверрайд, если включен) */
+        [data-mode="dark"] {
+            filter: brightness(0.85) contrast(1.1);
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            transition: all 0.3s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .card { background-color: var(--card-bg); }
+        .accent-bg { background-color: var(--accent-color); color: #fff; }
+        .accent-text { color: var(--accent-color); }
+        .border-accent { border-color: var(--accent-color); }
+
+        /* Кастомный скроллбар для холста */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-thumb { background: var(--accent-color); border-radius: 10px; }
+
+        .nav-item.active { border-bottom: 3px solid var(--accent-color); color: var(--accent-color); }
         
-        if (clientX === undefined || clientY === undefined) return null;
-
-        const scaleX = els.patternCanvas.width / rect.width;
-        const scaleY = els.patternCanvas.height / rect.height;
-
-        const x = Math.floor(((clientX - rect.left) * scaleX) / (els.patternCanvas.width / state.pattern.width));
-        const y = Math.floor(((clientY - rect.top) * scaleY) / (els.patternCanvas.height / state.pattern.height));
-
-        if (x >= 0 && x < state.pattern.width && y >= 0 && y < state.pattern.height) return { x, y };
-        return null;
-      }
-
-      function handleDrawAction(e) {
-        const coords = getCellCoords(e);
-        if (!coords) return;
-        const idx = coords.y * state.pattern.width + coords.x;
-        const targetColor = state.pattern.tool === 'eraser' ? '#FFFFFF' : state.pattern.activeColor;
-
-        if (state.pattern.pixels[idx] !== targetColor) {
-          state.pattern.pixels[idx] = targetColor;
-          drawCanvasGrid();
+        canvas {
+            touch-action: none;
+            image-rendering: pixelated;
         }
-      }
+    </style>
+</head>
+<body class="h-screen flex flex-col overflow-hidden" data-theme="cyber" data-mode="light">
 
-      // Умный алгоритм пикселизации (Box Blending / Color Averaging)
-      function processImageToGrid(img) {
-        const targetW = state.pattern.width;
-        const targetH = state.pattern.height;
+    <header class="p-4 flex justify-between items-center shadow-md z-10 card">
+        <h1 class="text-2xl font-bold tracking-widest uppercase accent-text">Filum</h1>
+        <div class="flex gap-4">
+            <button onclick="exportData()" class="p-2 rounded-full hover:opacity-80"><i class="fas fa-file-export"></i></button>
+            <label class="p-2 rounded-full hover:opacity-80 cursor-pointer">
+                <i class="fas fa-file-import"></i>
+                <input type="file" id="importFile" class="hidden" accept=".json" onchange="importData(event)">
+            </label>
+            <button onclick="toggleSettings()" class="p-2 rounded-full hover:opacity-80"><i class="fas fa-cog"></i></button>
+        </div>
+    </header>
 
-        const tempCanvas = document.createElement('canvas');
-        tempCanvas.width = img.width;
-        tempCanvas.height = img.height;
-        const tempCtx = tempCanvas.getContext('2d');
-        tempCtx.drawImage(img, 0, 0);
+    <main class="flex-1 overflow-y-auto p-4 pb-24 relative" id="main-content">
+        
+        <section id="tab-projects" class="block space-y-4">
+            <h2 class="text-xl font-bold mb-4">Мои процессы</h2>
+            <div id="projects-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                </div>
+            <button onclick="createNewProject()" class="w-full p-4 rounded-2xl accent-bg font-bold shadow-lg shadow-[var(--accent-color)]/20 mt-4 text-gray-900">+ Новый процесс</button>
+        </section>
 
-        let srcData;
-        try {
-          srcData = tempCtx.getImageData(0, 0, img.width, img.height).data;
-        } catch (err) {
-          alert('Ошибка безопасности при чтении изображения.');
-          return;
-        }
+        <section id="tab-counter" class="hidden h-full flex-col justify-center items-center space-y-8">
+            <div class="text-center">
+                <p class="text-sm opacity-70 uppercase tracking-widest">Текущий ряд</p>
+                <div id="row-count" class="text-8xl font-bold accent-text drop-shadow-md">0</div>
+            </div>
+            <div class="flex items-end gap-6 w-full max-w-md justify-center">
+                <button onclick="updateRow(-1)" class="w-16 h-16 rounded-full card text-xl shadow-md border-2 border-accent opacity-80 flex items-center justify-center">
+                    <i class="fas fa-minus"></i>
+                </button>
+                <button onclick="updateRow(1)" class="w-32 h-32 rounded-full accent-bg text-5xl shadow-xl flex items-center justify-center text-gray-900 transform active:scale-95 transition-transform">
+                    <i class="fas fa-plus"></i>
+                </button>
+            </div>
+            <div class="w-full max-w-xs mt-8">
+                <label class="text-sm opacity-70">Оповещение каждые X рядов:</label>
+                <input type="number" id="alert-interval" class="w-full p-3 rounded-xl card border border-gray-600 mt-2 bg-transparent text-center text-xl outline-none border-accent" value="10">
+            </div>
+        </section>
 
-        const newPixels = new Array(targetW * targetH).fill('#FFFFFF');
-        const parsedPalette = state.pattern.colors.map(c => parseHexColor(c));
+        <section id="tab-canvas" class="hidden h-full flex-col">
+            <div class="flex gap-2 mb-4 justify-between items-center">
+                <input type="color" id="colorPicker" value="#00ffcc" class="w-10 h-10 rounded cursor-pointer border-0 p-0 bg-transparent">
+                <div class="flex gap-2">
+                    <button onclick="setDrawMode('draw')" class="p-3 rounded-xl card active-tool border-2 border-accent"><i class="fas fa-paint-brush"></i></button>
+                    <button onclick="setDrawMode('erase')" class="p-3 rounded-xl card"><i class="fas fa-eraser"></i></button>
+                </div>
+                <label class="p-3 rounded-xl card cursor-pointer accent-text font-bold text-sm">
+                    Из фото
+                    <input type="file" id="imageUpload" class="hidden" accept="image/*" onchange="imageToPixelArt(event)">
+                </label>
+            </div>
+            <div class="flex-1 w-full overflow-auto border-2 border-dashed border-gray-600 rounded-xl flex justify-center items-center relative card">
+                <canvas id="patternCanvas" class="bg-white shadow-lg cursor-crosshair"></canvas>
+            </div>
+        </section>
 
-        const boxW = img.width / targetW;
-        const boxH = img.height / targetH;
+        <section id="tab-calc" class="hidden space-y-4 max-w-md mx-auto mt-4">
+            <h2 class="text-xl font-bold mb-4 text-center">Калькулятор стоимости</h2>
+            <div class="space-y-4 card p-6 rounded-2xl">
+                <div>
+                    <label class="text-sm opacity-70">Материалы (₽)</label>
+                    <input type="number" id="calc-materials" class="w-full p-3 rounded-xl bg-transparent border-2 border-accent outline-none" placeholder="0">
+                </div>
+                <div>
+                    <label class="text-sm opacity-70">Время работы (Часы)</label>
+                    <input type="number" id="calc-time" class="w-full p-3 rounded-xl bg-transparent border-2 border-accent outline-none" placeholder="0">
+                </div>
+                <div>
+                    <label class="text-sm opacity-70">Желаемая ставка (₽/час)</label>
+                    <input type="number" id="calc-rate" class="w-full p-3 rounded-xl bg-transparent border-2 border-accent outline-none" placeholder="0">
+                </div>
+                <button onclick="calculatePrice()" class="w-full p-4 rounded-xl accent-bg font-bold text-gray-900 mt-2">Рассчитать</button>
+                <div class="text-center mt-6">
+                    <p class="text-sm opacity-70">Справедливая цена:</p>
+                    <div id="calc-result" class="text-4xl font-bold accent-text mt-2">0 ₽</div>
+                </div>
+            </div>
+        </section>
 
-        for (let gY = 0; gY < targetH; gY++) {
-          for (let gX = 0; gX < targetW; gX++) {
+    </main>
+
+    <nav class="fixed bottom-0 w-full card flex justify-around p-2 pb-safe shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] z-20">
+        <button onclick="switchTab('projects')" class="nav-item active flex-1 py-3 text-center rounded-xl transition-colors"><i class="fas fa-list-ul text-xl"></i></button>
+        <button onclick="switchTab('counter')" class="nav-item flex-1 py-3 text-center rounded-xl transition-colors"><i class="fas fa-sort-numeric-up text-xl"></i></button>
+        <button onclick="switchTab('canvas')" class="nav-item flex-1 py-3 text-center rounded-xl transition-colors"><i class="fas fa-border-all text-xl"></i></button>
+        <button onclick="switchTab('calc')" class="nav-item flex-1 py-3 text-center rounded-xl transition-colors"><i class="fas fa-calculator text-xl"></i></button>
+    </nav>
+
+    <div id="settings-modal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="card p-6 rounded-3xl w-full max-w-sm">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-bold">Настройки</h3>
+                <button onclick="toggleSettings()" class="text-2xl">&times;</button>
+            </div>
             
-            const startX = Math.floor(gX * boxW);
-            const startY = Math.floor(gY * boxH);
-            const endX = Math.min(img.width, Math.floor((gX + 1) * boxW));
-            const endY = Math.min(img.height, Math.floor((gY + 1) * boxH));
+            <div class="space-y-6">
+                <div>
+                    <p class="mb-3 font-bold opacity-80">Тема оформления</p>
+                    <div class="grid grid-cols-2 gap-3">
+                        <button onclick="setTheme('minimal')" class="p-3 rounded-xl border border-gray-500 text-sm">Минимализм</button>
+                        <button onclick="setTheme('cyber')" class="p-3 rounded-xl border border-purple-500 text-sm text-[#00ffcc]">Кибер-Неон</button>
+                        <button onclick="setTheme('rose')" class="p-3 rounded-xl border border-pink-300 text-sm">Пудровая Роза</button>
+                        <button onclick="setTheme('forest')" class="p-3 rounded-xl border border-green-500 text-sm">Лесная Прохлада</button>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between">
+                    <p class="font-bold opacity-80">Ночной режим</p>
+                    <input type="checkbox" id="darkModeToggle" class="w-6 h-6 accent-[var(--accent-color)]" onchange="toggleDarkMode(this.checked)">
+                </div>
+            </div>
+        </div>
+    </div>
 
-            let sumR = 0, sumG = 0, sumB = 0, count = 0;
+    <script>
+        // --- State Management ---
+        let state = JSON.parse(localStorage.getItem('filum_data')) || {
+            theme: 'cyber',
+            darkMode: false,
+            projects: [],
+            currentProjectIndex: 0
+        };
+        let currentRow = 0;
+        let drawMode = 'draw';
+        
+        // Canvas config
+        const GRID_SIZE = 30;
+        const CELL_SIZE = 15;
+        const canvas = document.getElementById('patternCanvas');
+        const ctx = canvas.getContext('2d');
+        let isDrawing = false;
+        let gridData = Array(GRID_SIZE).fill().map(() => Array(GRID_SIZE).fill(''));
 
-            for (let pixelY = startY; pixelY < endY; pixelY++) {
-              for (let pixelX = startX; pixelX < endX; pixelX++) {
-                const pixelIdx = (pixelY * img.width + pixelX) * 4;
-                sumR += srcData[pixelIdx];
-                sumG += srcData[pixelIdx + 1];
-                sumB += srcData[pixelIdx + 2];
-                count++;
-              }
+        // --- Initialization ---
+        function init() {
+            document.body.setAttribute('data-theme', state.theme);
+            document.body.setAttribute('data-mode', state.darkMode ? 'dark' : 'light');
+            document.getElementById('darkModeToggle').checked = state.darkMode;
+            renderProjects();
+            initCanvas();
+        }
+
+        function saveData() {
+            localStorage.setItem('filum_data', JSON.stringify(state));
+        }
+
+        // --- UI Navigation ---
+        function switchTab(tabId) {
+            ['projects', 'counter', 'canvas', 'calc'].forEach(id => {
+                document.getElementById(`tab-${id}`).classList.add('hidden');
+            });
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            
+            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+            document.getElementById(`tab-${tabId}`).classList.add(tabId === 'counter' || tabId === 'canvas' ? 'flex' : 'block');
+            event.currentTarget.classList.add('active');
+        }
+
+        function toggleSettings() {
+            const modal = document.getElementById('settings-modal');
+            modal.classList.toggle('hidden');
+        }
+
+        // --- Themes ---
+        function setTheme(theme) {
+            state.theme = theme;
+            document.body.setAttribute('data-theme', theme);
+            saveData();
+        }
+
+        function toggleDarkMode(isDark) {
+            state.darkMode = isDark;
+            document.body.setAttribute('data-mode', isDark ? 'dark' : 'light');
+            saveData();
+        }
+
+        // --- Row Counter ---
+        function updateRow(change) {
+            currentRow += change;
+            if (currentRow < 0) currentRow = 0;
+            document.getElementById('row-count').innerText = currentRow;
+            
+            const interval = parseInt(document.getElementById('alert-interval').value);
+            if (change > 0 && interval > 0 && currentRow % interval === 0) {
+                // Визуальное оповещение
+                const counter = document.getElementById('row-count');
+                counter.classList.add('text-white', 'scale-125');
+                setTimeout(() => counter.classList.remove('text-white', 'scale-125'), 300);
+                if (navigator.vibrate) navigator.vibrate(200);
             }
+        }
 
-            if (count > 0) {
-              const avgR = sumR / count;
-              const avgG = sumG / count;
-              const avgB = sumB / count;
-              
-              let closestHex = '#FFFFFF';
-              let minDistance = Infinity;
+        // --- Canvas & Drawing ---
+        function initCanvas() {
+            canvas.width = GRID_SIZE * CELL_SIZE;
+            canvas.height = GRID_SIZE * CELL_SIZE;
+            drawGrid();
+            
+            // Touch/Mouse events
+            canvas.addEventListener('mousedown', startDraw);
+            canvas.addEventListener('mousemove', draw);
+            canvas.addEventListener('mouseup', stopDraw);
+            canvas.addEventListener('mouseleave', stopDraw);
+            
+            canvas.addEventListener('touchstart', (e) => { e.preventDefault(); startDraw(e.touches[0]); }, {passive: false});
+            canvas.addEventListener('touchmove', (e) => { e.preventDefault(); draw(e.touches[0]); }, {passive: false});
+            canvas.addEventListener('touchend', stopDraw);
+        }
 
-              for (const color of parsedPalette) {
-                const dist = Math.pow(avgR - color.r, 2) + Math.pow(avgG - color.g, 2) + Math.pow(avgB - color.b, 2);
-                if (dist < minDistance) {
-                  minDistance = dist;
-                  closestHex = color.hex;
+        function drawGrid() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for(let y=0; y<GRID_SIZE; y++) {
+                for(let x=0; x<GRID_SIZE; x++) {
+                    if (gridData[y][x]) {
+                        ctx.fillStyle = gridData[y][x];
+                        ctx.fillRect(x*CELL_SIZE, y*CELL_SIZE, CELL_SIZE, CELL_SIZE);
+                    }
+                    ctx.strokeStyle = '#e5e7eb';
+                    ctx.strokeRect(x*CELL_SIZE, y*CELL_SIZE, CELL_SIZE, CELL_SIZE);
                 }
-              }
-              newPixels[gY * targetW + gX] = closestHex;
             }
-          }
         }
 
-        recordHistory();
-        state.pattern.pixels = newPixels;
-        drawCanvasGrid();
-        saveStateToStorage();
-      }
-
-      function parseHexColor(hex) {
-        const cleaned = hex.replace('#', '');
-        const num = parseInt(cleaned, 16);
-        return {
-          hex,
-          r: (num >> 16) & 255,
-          g: (num >> 8) & 255,
-          b: num & 255
-        };
-      }
-
-      function triggerAlertNotification() {
-        const mode = state.rowCounter.alertMode;
-        if (mode === 'visual' || mode === 'both') {
-          els.alertBox.style.background = 'var(--color-primary)';
-          els.alertBox.style.color = 'var(--color-bg)';
-          setTimeout(() => {
-            els.alertBox.style.background = '';
-            els.alertBox.style.color = '';
-          }, 600);
+        function setDrawMode(mode) {
+            drawMode = mode;
         }
-        if (mode === 'sound' || mode === 'both') {
-          playNotificationBeep();
+
+        function getCanvasPos(e) {
+            const rect = canvas.getBoundingClientRect();
+            return {
+                x: Math.floor((e.clientX - rect.left) / (rect.width / canvas.width) / CELL_SIZE),
+                y: Math.floor((e.clientY - rect.top) / (rect.height / canvas.height) / CELL_SIZE)
+            };
         }
-      }
 
-      function playNotificationBeep() {
-        try {
-          if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-          const osc = audioCtx.createOscillator();
-          const gain = audioCtx.createGain();
-          osc.type = 'sine';
-          osc.frequency.setValueAtTime(660, audioCtx.currentTime);
-          gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
-          gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.15);
-          osc.connect(gain);
-          gain.connect(audioCtx.destination);
-          osc.start();
-          osc.stop(audioCtx.currentTime + 0.16);
-        } catch (e) {}
-      }
+        function startDraw(e) {
+            isDrawing = true;
+            draw(e);
+        }
 
-      function updateStatsSummary() {
-        const total = state.processes.length;
-        const average = total ? Math.round(state.processes.reduce((acc, p) => acc + p.progress, 0) / total) : 0;
-        els.footProcessCount.textContent = total;
-        els.footAverageProgress.textContent = `${average}%`;
-      }
+        function draw(e) {
+            if (!isDrawing) return;
+            const pos = getCanvasPos(e);
+            if (pos.x >= 0 && pos.x < GRID_SIZE && pos.y >= 0 && pos.y < GRID_SIZE) {
+                gridData[pos.y][pos.x] = drawMode === 'draw' ? document.getElementById('colorPicker').value : '';
+                drawGrid();
+            }
+        }
 
-      function attachEventListeners() {
-        // Синхронная навигация
-        document.querySelectorAll('[data-target]').forEach(button => {
-          button.addEventListener('click', () => {
-            const id = button.dataset.target;
-            document.querySelectorAll('[data-target]').forEach(b => b.classList.toggle('active', b.dataset.target === id));
-            const elem = document.getElementById(id);
-            if (elem) elem.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          });
-        });
+        function stopDraw() { isDrawing = false; }
 
-        // Смена палитры интерфейса
-        document.getElementById('themeGrid').addEventListener('click', (e) => {
-          const btn = e.target.closest('[data-theme-set]');
-          if (!btn) return;
-          state.settings.theme = btn.dataset.themeSet;
-          buildThemeButtons();
-          applyThemeStyles();
-          saveStateToStorage();
-        });
-
-        // Переключатель День/Ночь
-        els.modeButton.addEventListener('click', () => {
-          state.settings.mode = state.settings.mode === 'dark' ? 'light' : 'dark';
-          applyThemeStyles();
-          saveStateToStorage();
-        });
-
-        // Изменение цвета рисования
-        els.paletteGrid.addEventListener('click', (e) => {
-          const swatch = e.target.closest('[data-color-set]');
-          if (!swatch) return;
-          state.pattern.activeColor = swatch.dataset.color-set;
-          state.pattern.tool = 'brush';
-          document.querySelectorAll('[data-tool]').forEach(b => b.classList.toggle('active', b.dataset.tool === 'brush'));
-          renderPaletteSwatches();
-          saveStateToStorage();
-        });
-
-        // Переключение пресетов сетки конструктора
-        document.querySelectorAll('[data-grid-preset]').forEach(btn => {
-          btn.addEventListener('click', () => {
-            document.querySelectorAll('[data-grid-preset]').forEach(b => b.classList.toggle('active', b === btn));
-            const sz = parseInt(btn.dataset.gridPreset, 10);
-            recordHistory();
-            state.pattern.width = sz;
-            state.pattern.height = sz;
-            state.pattern.pixels = new Array(sz * sz).fill('#FFFFFF');
-            setupCanvasSize();
-            drawCanvasGrid();
-            saveStateToStorage();
-          });
-        });
-
-        // Инструменты рисования
-        document.querySelectorAll('[data-tool]').forEach(btn => {
-          btn.addEventListener('click', () => {
-            document.querySelectorAll('[data-tool]').forEach(b => b.classList.toggle('active', b === btn));
-            state.pattern.tool = btn.dataset.tool;
-            saveStateToStorage();
-          });
-        });
-
-        // Холст: мышь и тачскрин (Poco X4)
-        const startDrawingAction = (e) => {
-          e.preventDefault();
-          isDrawing = true;
-          handleDrawAction(e);
-        };
-        const moveDrawingAction = (e) => {
-          if (!isDrawing) return;
-          e.preventDefault();
-          handleDrawAction(e);
-        };
-        const stopDrawingAction = () => {
-          if (isDrawing) {
-            isDrawing = false;
-            saveStateToStorage();
-          }
-        };
-
-        els.patternCanvas.addEventListener('mousedown', startDrawingAction);
-        els.patternCanvas.addEventListener('mousemove', moveDrawingAction);
-        window.addEventListener('mouseup', stopDrawingAction);
-
-        els.patternCanvas.addEventListener('touchstart', startDrawingAction, { passive: false });
-        els.patternCanvas.addEventListener('touchmove', moveDrawingAction, { passive: false });
-        window.addEventListener('touchend', stopDrawingAction);
-
-        // Очистка сетки
-        els.clearPatternButton.addEventListener('click', () => {
-          if (!confirm('Очистить холст?')) return;
-          recordHistory();
-          state.pattern.pixels.fill('#FFFFFF');
-          drawCanvasGrid();
-          saveStateToStorage();
-        });
-
-        // Отмена действия (Undo)
-        els.undoButton.addEventListener('click', () => {
-          if (!historyStack.length) return;
-          state.pattern.pixels = historyStack.pop();
-          drawCanvasGrid();
-          saveStateToStorage();
-        });
-
-        // Импорт картинок
-        els.imageInput.addEventListener('change', (e) => {
-          const file = e.target.files[0];
-          if (!file) return;
-          const reader = new FileReader();
-          reader.onload = (event) => {
+        function imageToPixelArt(e) {
+            const file = e.target.files[0];
+            if (!file) return;
             const img = new Image();
-            img.onload = () => processImageToGrid(img);
-            img.src = event.target.result;
-          };
-          reader.readAsDataURL(file);
-          e.target.value = '';
-        });
+            img.onload = () => {
+                const tempCanvas = document.createElement('canvas');
+                const tCtx = tempCanvas.getContext('2d');
+                tempCanvas.width = GRID_SIZE;
+                tempCanvas.height = GRID_SIZE;
+                tCtx.drawImage(img, 0, 0, GRID_SIZE, GRID_SIZE);
+                
+                for(let y=0; y<GRID_SIZE; y++) {
+                    for(let x=0; x<GRID_SIZE; x++) {
+                        const pixel = tCtx.getImageData(x, y, 1, 1).data;
+                        gridData[y][x] = `rgb(${pixel[0]},${pixel[1]},${pixel[2]})`;
+                    }
+                }
+                drawGrid();
+            };
+            img.src = URL.createObjectURL(file);
+        }
 
-        // Скачивание PNG
-        els.downloadPatternButton.addEventListener('click', () => {
-          const a = document.createElement('a');
-          a.href = els.patternCanvas.toDataURL('image/png');
-          a.download = 'filum-pattern.png';
-          a.click();
-        });
+        // --- Calculator ---
+        function calculatePrice() {
+            const mat = parseFloat(document.getElementById('calc-materials').value) || 0;
+            const time = parseFloat(document.getElementById('calc-time').value) || 0;
+            const rate = parseFloat(document.getElementById('calc-rate').value) || 0;
+            const total = mat + (time * rate);
+            document.getElementById('calc-result').innerText = total.toFixed(2) + ' ₽';
+        }
 
-        // Добавление паттерна в процессы
-        els.savePatternButton.addEventListener('click', () => {
-          const title = prompt('Название для нового процесса:', 'Узор из конструктора');
-          if (!title) return;
-          state.processes.unshift({
-            id: 'p-' + Date.now(),
-            name: title,
-            craft: 'Схема Сharts',
-            progress: 0,
-            totalRows: state.pattern.height,
-            currentRow: 0,
-            note: `Сетка ${state.pattern.width}х${state.pattern.height}`
-          });
-          renderProcessesList();
-          saveStateToStorage();
-          alert('Процесс успешно добавлен!');
-        });
+        // --- Data Sync (Import/Export) ---
+        function exportData() {
+            const dataStr = JSON.stringify(state);
+            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+            const exportFileDefaultName = 'filum_progress.json';
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', exportFileDefaultName);
+            linkElement.click();
+        }
 
-        // Счётчик: клики
-        els.incrementButton.addEventListener('click', () => {
-          state.rowCounter.current++;
-          state.rowCounter.todayAdded++;
-          renderCounterPanel();
-          if (state.rowCounter.current % state.rowCounter.alertEvery === 0) {
-            triggerAlertNotification();
-          }
-          saveStateToStorage();
-        });
+        function importData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    state = JSON.parse(e.target.result);
+                    saveData();
+                    init();
+                    alert("Данные успешно восстановлены!");
+                } catch (err) {
+                    alert("Ошибка чтения файла.");
+                }
+            };
+            reader.readAsText(file);
+        }
 
-        els.decrementButton.addEventListener('click', () => {
-          state.rowCounter.current = Math.max(0, state.rowCounter.current - 1);
-          renderCounterPanel();
-          saveStateToStorage();
-        });
+        // --- Projects Dummy (UI Demo) ---
+        function renderProjects() {
+            const list = document.getElementById('projects-list');
+            list.innerHTML = `
+                <div class="card p-5 rounded-2xl border-l-4 border-accent relative">
+                    <h3 class="font-bold text-lg mb-2">Ночной процесс #1</h3>
+                    <div class="w-full bg-gray-300 rounded-full h-2 mb-2 dark:bg-gray-700">
+                        <div class="accent-bg h-2 rounded-full" style="width: 45%"></div>
+                    </div>
+                    <p class="text-xs opacity-70">Прогресс: 45% (300/666 рядов)</p>
+                    <button class="absolute top-4 right-4 opacity-50 hover:opacity-100"><i class="fas fa-play"></i></button>
+                </div>
+            `;
+        }
 
-        els.alertEveryInput.addEventListener('input', () => {
-          state.rowCounter.alertEvery = Math.max(1, parseInt(els.alertEveryInput.value, 10) || 1);
-          renderCounterPanel();
-          saveStateToStorage();
-        });
+        function createNewProject() {
+            alert("Здесь откроется окно создания нового проекта. В этой демо-версии UI настроен, логика готова к расширению.");
+        }
 
-        els.alertModeSelect.addEventListener('change', () => {
-          state.rowCounter.alertMode = els.alertModeSelect.value;
-          saveStateToStorage();
-        });
-
-        // Быстрое обновление из карточки процесса
-        els.processList.addEventListener('click', (e) => {
-          const btn = e.target.closest('[data-process-step]');
-          if (!btn) return;
-          const proc = state.processes.find(p => p.id === btn.dataset.processStep);
-          if (proc) {
-            proc.currentRow = Math.min(proc.totalRows, proc.currentRow + 1);
-            proc.progress = Math.round((proc.currentRow / proc.totalRows) * 100);
-            renderProcessesList();
-            saveStateToStorage();
-          }
-        });
-
-        // Создание процесса вручную
-        els.newProcessButton.addEventListener('click', () => {
-          const name = prompt('Название процесса:', 'Новый процесс');
-          if (!name) return;
-          const craft = prompt('Вид рукоделия:', 'Вязание') || 'Рукоделие';
-          const total = parseInt(prompt('Всего рядов:', '100'), 10) || 100;
-          
-          state.processes.unshift({
-            id: 'p-' + Date.now(),
-            name,
-            craft,
-            progress: 0,
-            totalRows: total,
-            currentRow: 0,
-            note: 'Создано вручную'
-          });
-          renderProcessesList();
-          saveStateToStorage();
-        });
-
-        els.addSampleButton.addEventListener('click', () => {
-          state.processes.unshift({
-            id: 'p-sample-' + Date.now(),
-            name: 'Шарф Northern Loop',
-            craft: 'Вязание',
-            progress: 15,
-            totalRows: 120,
-            currentRow: 18,
-            note: 'Шерсть мериноса, спицы 4мм'
-          });
-          renderProcessesList();
-          saveStateToStorage();
-        });
-
-        // Калькулятор цен
-        [els.materialsInput, els.hoursInput, els.rateInput, els.extraInput].forEach(inp => {
-          inp.addEventListener('input', () => {
-            state.calculator.materials = Number(els.materialsInput.value) || 0;
-            state.calculator.hours = Number(els.hoursInput.value) || 0;
-            state.calculator.rate = Number(els.rateInput.value) || 0;
-            state.calculator.extra = Number(els.extraInput.value) || 0;
-            renderCalculatorResult();
-            saveStateToStorage();
-          });
-        });
-
-        // Экспорт и импорт JSON
-        els.exportButton.addEventListener('click', () => {
-          const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = 'filum-backup.json';
-          a.click();
-          URL.revokeObjectURL(url);
-        });
-
-        els.importInput.addEventListener('change', (e) => {
-          const file = e.target.files[0];
-          if (!file) return;
-          const reader = new FileReader();
-          reader.onload = (event) => {
-            try {
-              const imported = JSON.parse(event.target.result);
-              state = createFreshPixels({ ...state, ...imported });
-              init();
-              alert('Данные успешно загружены!');
-            } catch (err) {
-              alert('Ошибка чтения JSON файла.');
-            }
-          };
-          reader.readAsText(file);
-        });
-
-        window.addEventListener('resize', () => {
-          document.documentElement.style.setProperty('--display-mobile-brand', window.innerWidth <= 768 ? 'block' : 'none');
-        });
-      }
-
-      function escapeString(str) {
-        return String(str || '').replace(/[&<>"']/g, m => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m]));
-      }
-    });
-  </script>
+        // Запуск
+        init();
+    </script>
 </body>
 </html>
